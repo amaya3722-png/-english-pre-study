@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三脑英语 · 学习中心</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .week-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .day-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: box-shadow 0.2s; }
+  .day-card:hover { box-shadow: var(--shadow-lg); }
+  .day-card .header { padding: 20px 20px 12px; border-bottom: 1px solid var(--border); }
+  .day-card .header .day-num { font-family: var(--font-heading); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 700; }
+  .day-card .header h3 { font-family: var(--font-heading); font-size: 18px; margin: 4px 0 2px; color: var(--navy); }
+  .day-card .header .date { font-size: 13px; color: var(--muted); }
+  .day-card .slots { padding: 12px 20px 16px; }
+  .day-card .slots a { display: block; padding: 8px 12px; margin: 2px 0; border-radius: var(--radius); font-family: var(--font-heading); font-size: 14px; color: var(--navy); text-decoration: none; transition: background 0.15s; }
+  .day-card .slots a:hover { background: var(--accent-dim); }
+  .day-card .slots a .time { font-weight: 700; margin-right: 8px; color: var(--accent); }
+  .day-card .slots a .topic { color: var(--muted); }
+  .status-done { opacity: 0.5; }
+  .status-today { border: 2px solid var(--accent); }
+  .status-today .header { background: var(--accent-dim); }
+  .nav { margin-bottom: 32px; }
+  .nav a { color: var(--accent); text-decoration: none; font-family: var(--font-heading); font-weight: 600; font-size: 14px; }
+  .stats-bar { display: flex; gap: 24px; margin-bottom: 32px; flex-wrap: wrap; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; min-width: 120px; }
+  .stat .num { font-family: var(--font-heading); font-size: 28px; font-weight: 800; color: var(--navy); }
+  .stat .label { font-size: 12px; color: var(--muted); font-family: var(--font-heading); letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="brand">◆ 三脑英语</span>
+  <span class="meta">Claude Planner · GPT/Doubao Coach · Obsidian Database</span>
+</header>
+
+<div class="hero">
+  <div class="eyebrow">Learning Center · 学习中心</div>
+  <h1>Week 1 · 面试特训</h1>
+  <div class="subtitle">每天 4 节 · 15 分钟预学 + 25 分钟口语课 · B1 → B2</div>
+</div>
+
+<div class="container">
+
+<div class="stats-bar">
+  <div class="stat"><div class="num">2/5</div><div class="label">Days Complete</div></div>
+  <div class="stat"><div class="num">6/20</div><div class="label">Lessons Done</div></div>
+  <div class="stat"><div class="num">75%</div><div class="label">Fluency</div></div>
+  <div class="stat"><div class="num">80%</div><div class="label">Pronunciation</div></div>
+</div>
+
+<div class="week-grid">
+
+  <!-- Day 1 -->
+  <div class="day-card status-done">
+    <div class="header"><div class="day-num">Day 1 · ✅ Done</div><h3>Self-Introduction</h3><div class="date">Wed · Jul 2</div></div>
+    <div class="slots">
+      <a><span class="time">08:00</span><span class="topic">30s Core Data</span></a>
+      <a><span class="time">10:00</span><span class="topic">Polish Delivery</span></a>
+      <a><span class="time">14:00</span><span class="topic">2min Full Intro</span></a>
+      <a><span class="time">20:00</span><span class="topic">Final Integration</span></a>
+    </div>
+  </div>
+
+  <!-- Day 2 -->
+  <div class="day-card status-done">
+    <div class="header"><div class="day-num">Day 2 · ✅ Done</div><h3>Career Story</h3><div class="date">Thu · Jul 3</div></div>
+    <div class="slots">
+      <a><span class="time">08:00</span><span class="topic">Act 1 · PM Years</span></a>
+      <a><span class="time">10:00</span><span class="topic">Act 2 · Director Leap</span></a>
+      <a><span class="time">14:00</span><span class="topic">Act 3 · Why I'm Here</span></a>
+      <a><span class="time">20:00</span><span class="topic">Full Integration</span></a>
+    </div>
+  </div>
+
+  <!-- Day 3 -->
+  <div class="day-card status-today">
+    <div class="header"><div class="day-num">Day 3 · 🔵 Friday</div><h3>STAR Method · Smart Terminal</h3><div class="date">Fri · Jul 4</div></div>
+    <div class="slots">
+      <a href="day3/0800.html"><span class="time">08:00</span><span class="topic">Situation + Task</span></a>
+      <a href="day3/1000.html"><span class="time">10:00</span><span class="topic">Action</span></a>
+      <a href="day3/1400.html"><span class="time">14:00</span><span class="topic">Results + Conditionals</span></a>
+      <a href="day3/2000.html"><span class="time">20:00</span><span class="topic">Full Integration</span></a>
+    </div>
+  </div>
+
+  <!-- Day 4 -->
+  <div class="day-card">
+    <div class="header"><div class="day-num">Day 4 · ⬜ Monday</div><h3>Common Questions</h3><div class="date">Mon · Jul 7</div></div>
+    <div class="slots">
+      <a><span class="time">08:00</span><span class="topic">Why Leave + Why Hire</span></a>
+      <a><span class="time">10:00</span><span class="topic">Management Style</span></a>
+      <a><span class="time">14:00</span><span class="topic">Weakness + Failure</span></a>
+      <a><span class="time">20:00</span><span class="topic">Speed Round</span></a>
+    </div>
+  </div>
+
+  <!-- Day 5 -->
+  <div class="day-card">
+    <div class="header"><div class="day-num">Day 5 · ⬜ Tuesday</div><h3>Mock Interviews</h3><div class="date">Tue · Jul 8</div></div>
+    <div class="slots">
+      <a><span class="time">08:00</span><span class="topic">Part 1 · Background</span></a>
+      <a><span class="time">10:00</span><span class="topic">Part 2 · Deep Dive</span></a>
+      <a><span class="time">14:00</span><span class="topic">Part 3 · Closing</span></a>
+      <a><span class="time">20:00</span><span class="topic">Full Mock + Review</span></a>
+    </div>
+  </div>
+
+</div>
+
+</div>
+</body>
+</html>
