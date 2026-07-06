@@ -277,6 +277,11 @@ IMPROVEMENT_PRIORITY:
 <script>
 const p=document.getElementById('prompt');p.addEventListener('click',function(){const r=document.createRange();r.selectNodeContents(this);window.getSelection().removeAllRanges();window.getSelection().addRange(r);navigator.clipboard.writeText(this.textContent).then(()=>{const o=this.style.background;this.style.background='#e8f5e9';this.style.borderColor='#1e7a5a';setTimeout(()=>{this.style.background=o;this.style.borderColor='#c0cdc4'},900)})});
 
+// TTS: preload neural voices on page load
+let _voices=[];
+speechSynthesis.getVoices();
+speechSynthesis.addEventListener('voiceschanged',()=>{_voices=speechSynthesis.getVoices()});
+
 // TTS: inject 🔊 button into every <p> inside .model-answer, one sentence = one button
 let _tts=null,_btn=null;
 function speakP(e){
@@ -291,8 +296,8 @@ function speakP(e){
   }
   const u=new SpeechSynthesisUtterance(text);
   u.lang='en-US';u.rate=0.9;
-  const voices=speechSynthesis.getVoices();
-  const v=voices.find(x=>x.lang==='en-US'&&x.name.includes('Natural'))||voices.find(x=>x.lang==='en-US'&&x.name.includes('Online'))||voices.find(x=>x.lang==='en-US'&&x.name.includes('Google'))||voices.find(x=>x.lang==='en-US');
+  const voices=_voices.length?_voices:speechSynthesis.getVoices();
+  const v=voices.find(x=>x.lang==='en-US'&&(x.name.includes('Natural')||x.name.includes('Jenny')||x.name.includes('Guy')||x.name.includes('Aria')))||voices.find(x=>x.lang==='en-US'&&x.name.includes('Online'))||voices.find(x=>x.lang==='en-US'&&x.name.includes('Google'))||voices.find(x=>x.lang==='en-US');
   if(v)u.voice=v;
   u.onend=()=>{btn.classList.remove('playing');_tts=null;_btn=null};
   u.onerror=()=>{btn.classList.remove('playing');_tts=null;_btn=null};
