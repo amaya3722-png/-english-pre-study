@@ -288,7 +288,7 @@ function speakP(e){
   const u=new SpeechSynthesisUtterance(text);
   u.lang='en-US';u.rate=0.9;
   const voices=speechSynthesis.getVoices();
-  const v=voices.find(x=>x.lang==='en-US'&&x.name.includes('Google'))||voices.find(x=>x.lang==='en-US');
+  const v=voices.find(x=>x.lang==='en-US'&&x.name.includes('Natural'))||voices.find(x=>x.lang==='en-US'&&x.name.includes('Online'))||voices.find(x=>x.lang==='en-US'&&x.name.includes('Google'))||voices.find(x=>x.lang==='en-US');
   if(v)u.voice=v;
   u.onend=()=>{btn.classList.remove('playing');_tts=null;_btn=null};
   u.onerror=()=>{btn.classList.remove('playing');_tts=null;_btn=null};
