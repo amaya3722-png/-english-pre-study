@@ -32,7 +32,7 @@
   <p style="font-size:14px;color:var(--muted);margin-bottom:16px;">目标：25-30秒。5层信息层层递进：身份 → 经验 → 规模 → 成就 → 目标。</p>
 
   <div class="model-answer">
-    <div class="qa-label">🗣 标准版（跟读用）<button class="tts-btn" onclick="speakBlock(this)" title="播放美式发音"><span class="icon-idle">🔊</span><span class="icon-playing">⏸</span></button></div>
+    <div class="qa-label">🗣 标准版（跟读用）</div>
     <p>Hello, I'm Jason Huang, Product Director specializing in payment hardware. I have 10 years of industry experience, growing from a PM to a department head. I oversee 6 product lines and more than 50 products, with annual sales hitting 8 million units shipped to over 70 countries. Our traditional POS products have held the No.1 market share in China for <strong>six consecutive years</strong>. Right now, I'm actively seeking a Product Director position based in Shenzhen.</p>
   </div>
 
@@ -273,26 +273,36 @@ IMPROVEMENT_PRIORITY:
 <script>
 const p=document.getElementById('prompt');p.addEventListener('click',function(){const r=document.createRange();r.selectNodeContents(this);window.getSelection().removeAllRanges();window.getSelection().addRange(r);navigator.clipboard.writeText(this.textContent).then(()=>{const o=this.style.background;this.style.background='#e8f5e9';this.style.borderColor='#1e7a5a';setTimeout(()=>{this.style.background=o;this.style.borderColor='#c0cdc4'},900)})});
 
-// TTS: speak all English text in a model-answer block
-let _tts=null;
-function speakBlock(btn){
-  const block=btn.closest('.model-answer');
-  const text=block.textContent.replace(/\s+/g,' ').trim();
+// TTS: inject 🔊 button into every <p> inside .model-answer, one sentence = one button
+let _tts=null,_btn=null;
+function speakP(e){
+  e.stopPropagation();
+  const btn=e.currentTarget;
+  const p=btn.parentNode;
+  const text=p.textContent.replace(/\s+/g,' ').trim();
   if(_tts&&speechSynthesis.speaking){
     speechSynthesis.cancel();
-    btn.classList.remove('playing');
-    if(_tts.block===block){_tts=null;return}
+    if(_btn)_btn.classList.remove('playing');
+    if(_btn===btn){_tts=null;_btn=null;return}
   }
   const u=new SpeechSynthesisUtterance(text);
   u.lang='en-US';u.rate=0.9;
   const voices=speechSynthesis.getVoices();
   const v=voices.find(x=>x.lang==='en-US'&&x.name.includes('Google'))||voices.find(x=>x.lang==='en-US');
   if(v)u.voice=v;
-  u.onend=()=>{btn.classList.remove('playing');_tts=null};
-  u.onerror=()=>{btn.classList.remove('playing');_tts=null};
-  btn.classList.add('playing');_tts={block,u};
+  u.onend=()=>{btn.classList.remove('playing');_tts=null;_btn=null};
+  u.onerror=()=>{btn.classList.remove('playing');_tts=null;_btn=null};
+  btn.classList.add('playing');_tts=u;_btn=btn;
   speechSynthesis.speak(u)
 }
+document.querySelectorAll('.model-answer p').forEach(p=>{
+  const btn=document.createElement('span');
+  btn.className='tts-btn';
+  btn.textContent='🔊';
+  btn.title='朗读这句';
+  btn.addEventListener('click',speakP);
+  p.insertBefore(btn,p.firstChild)
+});
 </script>
 </body>
 </html>

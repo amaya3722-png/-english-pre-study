@@ -32,14 +32,14 @@
   <p style="font-size:14px;color:var(--muted);margin-bottom:16px;">好故事不是念简历。有起点、转折、高潮。展现成长轨迹：执行者 → 管理者 → 战略者。</p>
 
   <div class="model-answer">
-    <div class="qa-label">🎬 Act 1 · PM 时代（2016–2021）—— 起点<button class="tts-btn" onclick="speakBlock(this)" title="播放美式发音"><span class="icon-idle">🔊</span><span class="icon-playing">⏸</span></button></div>
+    <div class="qa-label">🎬 Act 1 · PM 时代（2016–2021）—— 起点</div>
     <p>I started my career at NEWPOS in 2016, right after graduating with a degree in Automation. I joined as a Product Manager, focused on mobile POS products.</p>
     <p>In those first five years, I was responsible for product go-to-market strategy and market promotion. I <strong>built</strong> the standardized product documentation system — sales collateral, user manuals, security specifications — which <strong>became</strong> the foundation for our pre-sales and bidding operations. I also <strong>supported</strong> multiple bidding projects as a technical advisor, helping the team <strong>win</strong> key contracts.</p>
     <p>Those five years gave me a deep understanding of the entire payment chain. It <strong>laid</strong> the groundwork for everything that came next.</p>
   </div>
 
   <div class="model-answer">
-    <div class="qa-label">🎬 Act 2 · 总监跃升（2021–至今）—— 高潮（最长的一段！）<button class="tts-btn" onclick="speakBlock(this)" title="播放美式发音"><span class="icon-idle">🔊</span><span class="icon-playing">⏸</span></button></div>
+    <div class="qa-label">🎬 Act 2 · 总监跃升（2021–至今）—— 高潮（最长的一段！）</div>
     <p>In 2021, after delivering strong results in product iteration and market expansion, I <strong>was promoted</strong> to lead the entire product department. This was a significant shift — from managing products to managing a product organization.</p>
     <p>I <strong>inherited</strong> 6 product lines at various stages of maturity. My first priority was building the team — I <strong>grew</strong> it from 6 people to 12, <strong>structured</strong> into four functional groups: product planning, product marketing, pre-sales, and project management. I also <strong>built</strong> standardized workflows for product lifecycle management and bidding processes, shifting the department from ad-hoc to process-driven.</p>
     <p>On the product side, I <strong>led</strong> several key transformations. I <strong>expanded</strong> our smart terminal portfolio from 2 aging models to 6 competitive products across Qualcomm, Unisoc, and MTK. I <strong>took</strong> our sound box from concept to 300,000 units in six months — our first product to enter the Alipay ecosystem. And I <strong>drove</strong> an AI-powered digital transformation that <strong>boosted</strong> pre-sales efficiency by over 50%.</p>
@@ -47,7 +47,7 @@
   </div>
 
   <div class="model-answer">
-    <div class="qa-label">🎬 Act 3 · 为什么在这里—— 收尾（有力！）<button class="tts-btn" onclick="speakBlock(this)" title="播放美式发音"><span class="icon-idle">🔊</span><span class="icon-playing">⏸</span></button></div>
+    <div class="qa-label">🎬 Act 3 · 为什么在这里—— 收尾（有力！）</div>
     <p>After five years as a department head, I <strong>have taken</strong> the product organization from good to great. We have a strong team, mature processes, and a proven track record. Now I am ready for a new challenge at a larger scale.</p>
     <p>What I bring is a combination that is hard to find in one person: deep payment hardware expertise, proven global market experience, a track record of building and leading teams, and genuine passion for using AI to make product organizations more efficient. I am looking for a Product Director role where I can apply that full stack of capabilities.</p>
   </div>
@@ -277,26 +277,36 @@ IMPROVEMENT_PRIORITY:
 <script>
 const p=document.getElementById('prompt');p.addEventListener('click',function(){const r=document.createRange();r.selectNodeContents(this);window.getSelection().removeAllRanges();window.getSelection().addRange(r);navigator.clipboard.writeText(this.textContent).then(()=>{const o=this.style.background;this.style.background='#e8f5e9';this.style.borderColor='#1e7a5a';setTimeout(()=>{this.style.background=o;this.style.borderColor='#c0cdc4'},900)})});
 
-// TTS: speak all English text in a model-answer block
-let _tts=null;
-function speakBlock(btn){
-  const block=btn.closest('.model-answer');
-  const text=block.textContent.replace(/\s+/g,' ').trim();
+// TTS: inject 🔊 button into every <p> inside .model-answer, one sentence = one button
+let _tts=null,_btn=null;
+function speakP(e){
+  e.stopPropagation();
+  const btn=e.currentTarget;
+  const p=btn.parentNode;
+  const text=p.textContent.replace(/\s+/g,' ').trim();
   if(_tts&&speechSynthesis.speaking){
     speechSynthesis.cancel();
-    btn.classList.remove('playing');
-    if(_tts.block===block){_tts=null;return}
+    if(_btn)_btn.classList.remove('playing');
+    if(_btn===btn){_tts=null;_btn=null;return}
   }
   const u=new SpeechSynthesisUtterance(text);
   u.lang='en-US';u.rate=0.9;
   const voices=speechSynthesis.getVoices();
   const v=voices.find(x=>x.lang==='en-US'&&x.name.includes('Google'))||voices.find(x=>x.lang==='en-US');
   if(v)u.voice=v;
-  u.onend=()=>{btn.classList.remove('playing');_tts=null};
-  u.onerror=()=>{btn.classList.remove('playing');_tts=null};
-  btn.classList.add('playing');_tts={block,u};
+  u.onend=()=>{btn.classList.remove('playing');_tts=null;_btn=null};
+  u.onerror=()=>{btn.classList.remove('playing');_tts=null;_btn=null};
+  btn.classList.add('playing');_tts=u;_btn=btn;
   speechSynthesis.speak(u)
 }
+document.querySelectorAll('.model-answer p').forEach(p=>{
+  const btn=document.createElement('span');
+  btn.className='tts-btn';
+  btn.textContent='🔊';
+  btn.title='朗读这句';
+  btn.addEventListener('click',speakP);
+  p.insertBefore(btn,p.firstChild)
+});
 </script>
 </body>
 </html>
