@@ -135,6 +135,7 @@ body {
   margin: 12px 0;
   font-size: 16px;
   line-height: 1.9;
+  position: relative;
 }
 .model-answer .qa-label {
   font-family: var(--font-heading);
@@ -144,9 +145,40 @@ body {
   color: var(--accent);
   font-weight: 700;
   margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .model-answer p { margin-bottom: 12px; }
 .model-answer p:last-child { margin-bottom: 0; }
+
+/* ── TTS Play Button ── */
+.tts-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  background: var(--card);
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 13px;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  line-height: 1;
+}
+.tts-btn:hover { background: var(--accent-dim); }
+.tts-btn.playing {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.tts-btn .icon-idle { display: inline; }
+.tts-btn .icon-playing { display: none; }
+.tts-btn.playing .icon-idle { display: none; }
+.tts-btn.playing .icon-playing { display: inline; }
 
 /* ── Vocab Cards ── */
 .vocab-grid {
