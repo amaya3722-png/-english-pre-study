@@ -273,35 +273,39 @@ IMPROVEMENT_PRIORITY:
 <script>
 const p=document.getElementById('prompt');p.addEventListener('click',function(){const r=document.createRange();r.selectNodeContents(this);window.getSelection().removeAllRanges();window.getSelection().addRange(r);navigator.clipboard.writeText(this.textContent).then(()=>{const o=this.style.background;this.style.background='#e8f5e9';this.style.borderColor='#1e7a5a';setTimeout(()=>{this.style.background=o;this.style.borderColor='#c0cdc4'},900)})});
 
-// TTS: preload neural voices on page load
+// TTS: preload neural voices, inject 🔊 per English paragraph
 let _voices=[];
 speechSynthesis.getVoices();
-speechSynthesis.addEventListener('voiceschanged',()=>{_voices=speechSynthesis.getVoices()});
+speechSynthesis.addEventListener('voiceschanged',function(){_voices=speechSynthesis.getVoices()});
 
-// TTS: inject 🔊 button into every <p> inside .model-answer, one sentence = one button
 let _tts=null,_btn=null;
 function speakP(e){
   e.stopPropagation();
-  const btn=e.currentTarget;
-  const p=btn.parentNode;
-  const text=p.textContent.replace(/\s+/g,' ').trim();
+  var btn=e.currentTarget, p=btn.parentNode;
+  var c=p.cloneNode(true), t=c.querySelector('.tts-btn');if(t)t.remove();
+  var text=c.textContent.replace(/\s+/g,' ').trim();
+  // strip all non-ASCII (Chinese, emoji), keep only English
+  text=text.replace(/[^\x00-\x7F]/g,'').replace(/\s+/g,' ').trim();
+  if(!text||text.length<5)return;
   if(_tts&&speechSynthesis.speaking){
     speechSynthesis.cancel();
     if(_btn)_btn.classList.remove('playing');
     if(_btn===btn){_tts=null;_btn=null;return}
   }
-  const u=new SpeechSynthesisUtterance(text);
+  var u=new SpeechSynthesisUtterance(text);
   u.lang='en-US';u.rate=0.9;
-  const voices=_voices.length?_voices:speechSynthesis.getVoices();
-  const v=voices.find(x=>x.lang==='en-US'&&(x.name.includes('Natural')||x.name.includes('Jenny')||x.name.includes('Guy')||x.name.includes('Aria')))||voices.find(x=>x.lang==='en-US'&&x.name.includes('Online'))||voices.find(x=>x.lang==='en-US'&&x.name.includes('Google'))||voices.find(x=>x.lang==='en-US');
+  var voices=_voices.length?_voices:speechSynthesis.getVoices();
+  var v=voices.find(function(x){return x.lang==='en-US'&&(x.name.indexOf('Natural')>-1||x.name.indexOf('Jenny')>-1||x.name.indexOf('Guy')>-1||x.name.indexOf('Aria')>-1)})||voices.find(function(x){return x.lang==='en-US'&&x.name.indexOf('Online')>-1})||voices.find(function(x){return x.lang==='en-US'&&x.name.indexOf('Google')>-1})||voices.find(function(x){return x.lang==='en-US'});
   if(v)u.voice=v;
-  u.onend=()=>{btn.classList.remove('playing');_tts=null;_btn=null};
-  u.onerror=()=>{btn.classList.remove('playing');_tts=null;_btn=null};
+  u.onend=function(){btn.classList.remove('playing');_tts=null;_btn=null};
+  u.onerror=function(){btn.classList.remove('playing');_tts=null;_btn=null};
   btn.classList.add('playing');_tts=u;_btn=btn;
   speechSynthesis.speak(u)
 }
-document.querySelectorAll('.model-answer p').forEach(p=>{
-  const btn=document.createElement('span');
+document.querySelectorAll('.model-answer p').forEach(function(p){
+  var t=p.cloneNode(true);
+  if(!/[a-zA-Z]{8,}/.test(t.textContent))return;
+  var btn=document.createElement('span');
   btn.className='tts-btn';
   btn.textContent='🔊';
   btn.title='朗读这句';
